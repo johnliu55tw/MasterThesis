@@ -1,0 +1,57 @@
+\documentclass{nyustthesis}
+
+\usepackage{times}
+\usepackage{verbatim}
+\usepackage{color}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{wallpaper}
+
+% Using the tex-text mapping for ligatures etc.
+\defaultfontfeatures{Mapping=tex-text}
+
+% Set the default fonts
+\setmainfont{Times New Roman}
+\setCJKmainfont[AutoFakeBold=2,AutoFakeSlant=.2]{AR PL UKai TW}
+
+% Your information goes here
+\input{nyustvars}
+
+\begin{document}
+\CenterWallPaper{.20}{nyust-logo}
+
+\frontmatter
+\makecover
+
+%\makecertification
+
+\input{abstract}
+\input{acknowledgements}
+
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\mainmatter
+
+% Your thesis goes here
+\input{chaptertemplate}
+%\input{related}
+%\input{photoshoot}
+%\input{modeling}
+%\input{application}
+%\input{conclusion}
+
+\appendix
+
+\backmatter
+
+\addcontentsline{toc}{chapter}{\bibname}
+\bibliographystyle{abbrv}
+
+% Your bibliography goes here
+\bibliography{thesis}
+
+\end{document}
