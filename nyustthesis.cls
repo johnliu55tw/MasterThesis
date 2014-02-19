@@ -28,6 +28,8 @@
 \RequirePackage[top=3cm,left=3cm,bottom=3cm,right=3cm]{geometry}
 \RequirePackage{xeCJK}
 \RequirePackage{setspace}
+\RequirePackage{titlesec}
+\RequirePackage{titletoc}
 
 % Declarations
 \DeclareRobustCommand{\university}[2]{\gdef\@universityen{#1}\gdef\@universityzh{#2}}
@@ -53,6 +55,20 @@
 
 % Chinese "List of Tables"
 \renewcommand{\listtablename}{表目錄}
+
+% Chinese "Bibliography"
+\renewcommand{\bibname}{參考文獻}
+
+% Chinese "Figure" and "Table"
+\renewcommand{\figurename}{圖}
+\renewcommand{\tablename}{表}
+
+% Chinese "Chapter" and format
+\titlespacing{\chapter}{0cm}{-1.3cm}{1em}
+\titleformat{\chapter}{\centering\Huge\bfseries}{\zhnumber{\thechapter}、}{0pt}{}
+
+% Setting table of contents format
+\titlecontents{chapter}[0em]{}{\makebox[3.0em][l]{\zhnumber{\thecontentslabel}、}}{}{\titlerule*[0.7pc]{.}\contentspage}
 
 \DeclareRobustCommand{\keywordszh}[1]{\noindent{\textbf{關鍵字：}#1}}
 \DeclareRobustCommand{\keywordsen}[1]{\noindent{\textbf{Keywords:} #1}}

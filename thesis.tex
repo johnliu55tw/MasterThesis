@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{array}
 \usepackage{wallpaper}
+\usepackage{zhnumber}
 
 % Using the tex-text mapping for ligatures etc.
 \defaultfontfeatures{Mapping=tex-text}
@@ -29,20 +30,25 @@
 \input{abstract}
 \input{acknowledgements}
 
-
 \tableofcontents
+\addcontentsline{toc}{chapter}{\contentsname}
+
+\renewcommand{\numberline}[1]{圖~#1\hspace*{1em}}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
+
+\renewcommand{\numberline}[1]{表~#1\hspace*{1em}}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 
 \mainmatter
 
 % Your thesis goes here
-\input{chaptertemplate}
-%\input{related}
-%\input{photoshoot}
-%\input{modeling}
-%\input{application}
-%\input{conclusion}
+%\input{chaptertemplate}
+\input{introduction}
+\input{hardware}
 
 \appendix
 
@@ -53,5 +59,4 @@
 
 % Your bibliography goes here
 \bibliography{thesis}
-
 \end{document}
