@@ -30,6 +30,9 @@
 \RequirePackage{setspace}
 \RequirePackage{titlesec}
 \RequirePackage{titletoc}
+\RequirePackage{graphicx}
+\RequirePackage{caption}
+\RequirePackage[list=true]{subcaption}
 
 % Declarations
 \DeclareRobustCommand{\university}[2]{\gdef\@universityen{#1}\gdef\@universityzh{#2}}
@@ -68,7 +71,25 @@
 \titleformat{\chapter}{\centering\Huge\bfseries}{\zhnumber{\thechapter}、}{0pt}{}
 
 % Setting table of contents format
-\titlecontents{chapter}[0em]{}{\makebox[3.0em][l]{\zhnumber{\thecontentslabel}、}}{}{\titlerule*[0.7pc]{.}\contentspage}
+\titlecontents{chapter}[0em]{}{\makebox[3.0em][l]{\zhnumber{\thecontentslabel}、}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{section}[2em]{}{\makebox[3.0em][l]{\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+
+% Setting list of figure format
+\titlecontents{figure}[0em]{}{\makebox[3.5em][l]{\figurename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{subfigure}[2em]{}{\makebox[3.0em][l]{(\thecontentslabel)}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+
+% Setting list of table format
+\titlecontents{table}[0em]{}{\makebox[3.5em][l]{\tablename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{subtable}[2em]{}{\makebox[3.0em][l]{(\thecontentslabel)}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+
+% Space between lines
+\linespread{1.5}\selectfont
+
+% Space between paragraph
+\setlength{\parskip}{0.5cm}
+
+% Set first indent to twice the width of an character
+\setlength{\parindent}{2em}
 
 \DeclareRobustCommand{\keywordszh}[1]{\noindent{\textbf{關鍵字：}#1}}
 \DeclareRobustCommand{\keywordsen}[1]{\noindent{\textbf{Keywords:} #1}}
