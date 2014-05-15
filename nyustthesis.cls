@@ -50,6 +50,9 @@
 \abstractname{Abstract}{摘要}
 \acknowledgements{Acknowledgements}{誌謝}
 
+% Show subsection in TOC
+\setcounter{tocdepth}{2}
+
 % Chinese "Contents"
 \renewcommand{\contentsname}{目錄}
 
@@ -73,6 +76,7 @@
 % Setting table of contents format
 \titlecontents{chapter}[0em]{}{\makebox[3.0em][l]{\zhnumber{\thecontentslabel}、}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 \titlecontents{section}[2em]{}{\makebox[3.0em][l]{\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{subsection}[4em]{}{\makebox[3.0em][l]{\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 
 % Setting list of figure format
 \titlecontents{figure}[0em]{}{\makebox[3.5em][l]{\figurename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]

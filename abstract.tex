@@ -1,36 +1,31 @@
 \begin{abstractzh}
-本論文提出一方法整合了全球衛星定位系統 (GPS)、
-姿態航向參考系統 (AHRS)
-與雷射掃描式測距儀(LiDAR)，
+本論文提出一方法整合了全球衛星定位系統（GPS）、
+姿態量測系統（AHRS）
+與光學雷達（LiDAR），
 以達成無人自走車自動導航與避開導航路徑上之障礙物的功能。
-利用GPS和AHRS，
-車輛可得知本身與目標點之間的相對關係和方向資訊，
-達成自動導航的功能。
-使用雷射掃描式測距儀，
-車輛便可在導航的過程中量測週遭環境之變化，
-以便規劃其它路徑來閃避障礙物。
+使用GPS和AHRS，
+車輛可得知本身與目標點之間的相對關係和方向資訊；
+使用光學雷達，車輛便可在導航的過程中量測週遭環境之變化。
+而利用這些感測器所測量到的資訊，便可規劃出讓自走車在導航至目標位置的同時也能夠避開障礙物的路徑。
 本論文開發的Yun-Trooper II使用四驅模型搖控車作為底盤，
-並使用ARM處理器架構之Linux嵌入式系統作為決策與控制核心，
-而軟體方面則使用C++進行運算和控制車輛運動。
+並使用ARM處理器架構之Linux嵌入式系統作為運算核心，
+而軟體方面則使用C++進行計算和控制車輛運動。
 
-\keywordszh{GPS、AHRS、Linux、雷射測距儀、無人自走車}
+\keywordszh{GPS、AHRS、LiDAR、Linux、無人自走車}
 
 \end{abstractzh}
 
 \begin{abstracten}
-This thesis presents a method for the navigation and obstacle avoidance 
+The thesis presents a method for the navigation and obstacle avoidance 
 of an Unmanned Ground Vehicle (UGV), which integrated the
 Global Positioning System (GPS), 
 Attitude and Heading Refrence System (AHRS) and
-LiDAR rangefinder.
-From the data collected by GPS and AHRS sensor, position of the target relative
-to vehicle itself and heading of the vehicle could be determined,
-which is the information exploited by the navigation algorithm.
-With a LiDAR rangefinder, the vehicle could perceive the environment, therefore
-the algorithm could planning a new path if some obstacles have blocked the original path.
-This thesis has developed an UGV named `Yun-Trooper \nolinebreak II', which is based on a 4-wheel-drived
-remote-controlled model car. It has an ARM-Based embedded Linux computer as
-the core of calculation and control, and all the program were developed by C++ programming
+Light Detection and Ranging sensor (LiDAR).
+With GPS and AHRS sensor, position of the target relative to vehicle itself and heading of the vehicle could be determined.
+And with a LiDAR sensor, the vehicle could also perceive the environment.
+From the data collected by these sensors, navigation algorithm could planning a collision-free path to avoid obstacles and reach the target.
+The thesis has developed an UGV named `Yun-Trooper \nolinebreak II', which is based on a 4-wheel-drived remote-controlled model car.
+It is equipped with an ARM-Based embedded Linux computer to make calculation and control, and all the program were developed by C++ programming
 language.
 
 \keywordsen{GPS, AHRS, LiDAR, Linux, UGV}

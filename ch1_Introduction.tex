@@ -8,22 +8,22 @@
 本實驗室目前已擁有一輛使用四驅越野搖控車作為底盤架構的Yun-Trooper實驗平台，先前也使用此平台完成了許多研究：陳維懋\cite{chen:2011:Thesis}使用電腦視覺的方式來完成自動巡航，但由於電腦視覺容易受到環境干擾，
 呂明修\cite{Liu:2012:Thesis}使用全球衛星定位系統（GPS）及慣性量測單元（IMU）取代電腦視覺系統來完成自動巡航。
 
-第一代Yun-Trooper，如圖~\ref{fig:YunTrooperI}~所示，使用工業用電腦主機板搭配Windows XP作業系統作為決策中心，加上電腦視覺所需要的攝影機與影像擷取卡，其體積龐大且重量較重，造成巡航速度降低與耗電量增加。
-而本論文使用原先的底盤開發了第二代實驗平台Yun-Trooper II，如圖~\ref{fig:YunTrooperII}~所示，其使用嵌入式單板電腦搭配Linux作業系統，並且簡化了所需要的週邊配備，使得體積與重量大幅降低，開發成本也大幅下降。
+第一代Yun-Trooper，如圖~\ref{f:YunTrooperI}~所示，使用工業用電腦主機板搭配Windows XP作業系統作為決策中心，加上電腦視覺所需要的攝影機與影像擷取卡，其體積龐大且重量較重，造成巡航速度降低與耗電量增加。
+而本論文使用原先的底盤開發了第二代實驗平台Yun-Trooper II，如圖~\ref{f:YunTrooperII}~所示，其使用嵌入式單板電腦搭配Linux作業系統，並且簡化了所需要的週邊配備，使得體積與重量大幅降低，開發成本也大幅下降。
 
-本論文所開發的Yun-Trooper II除了使用原先的GPS自動導航系統外，另外使用了掃描式雷射測距儀（Scanning Laser Rangefinder，SLRF)作為偵測環境的感測器，使Yun-Trooper II能夠在自動導航時具有迴避障礙物的能力，安全的到達目的點。
+本論文所開發的Yun-Trooper II除了使用原先的GPS自動導航系統外，另外使用了掃描式雷射測距儀（Scanning Laser Rangefinder，SLRF）作為偵測環境的感測器，使Yun-Trooper II能夠在自動導航時具有迴避障礙物的能力，安全的到達目的點。
 
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{figures/YunTrooper.jpg}
+		\includegraphics[width=\textwidth]{figures/YunTrooper}
 		\caption{Yun Trooper}
-		\label{fig:YunTrooperI}
+		\label{f:YunTrooperI}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{figures/YunTrooperII.jpg}
+		\includegraphics[width=\textwidth]{figures/YunTrooperII}
 		\caption{Yun Trooper II}
-		\label{fig:YunTrooperII}
+		\label{f:YunTrooperII}
 	\end{subfigure}
 	\caption{Yun Trooper比較}
 \end{figure}
