@@ -6,8 +6,18 @@
 本論文之所開發的Yun-Trooper II是建置於TAMIYA公司的1:10四驅越野模型車TXT-1之上，並使用開源開發平台BeagleBone Black與Linux作業系統作為運算核心。
 而Yun-Trooper II的動力來源為兩顆直流馬達，並由兩顆伺服馬達同時控制前後輪之轉向機構。
 由於BeagleBone Black開發板可直接輸出PWM訊號，因此不需要伺服馬達控制器便可直接控制伺服馬達，而將輸出的PWM訊號利用馬達驅動器放大後也可直接控制直流馬達。
+BeagleBone Black也可直接輸出3.3V準位的IO訊號，因此另外裝置了2顆白光LED做為狀態指示燈，以顯示車輛運作狀況。
 位置姿態感測器使用Xsens公司所生產的MTi-G位置姿態感測器，環境感測器則使用HOKUYO公司所生產的URG-04LX-UG01掃描式雷射測距儀（LiDAR，光學雷達），而兩者皆使用USB介面與運算核心連接。
+然而BeagleBone Black只具有單一USB埠且輸出電流只有500mA，無法直接連接兩個感測器，因此需安裝一USB集線器且必須能夠外接電源，以提供兩顆感測器足夠的電流。
 Yun-Trooper II的一切動作都是由遠端無線操控，由筆記型電腦搭配一遊戲控制器做控制，而無線通訊則是使用Digi International生產的XBee PRO無線通訊模組。
+硬體架構如圖~\ref{f:hardware_structure}所示。
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{figures/HardwareStructure}
+	\caption{Yun-Trooper II硬體架構圖}
+	\label{f:hardware_structure}
+\end{figure}
 
 \section{運算核心}
 為了降低體積與重量，Yun-Trooper II使用BeagleBone Black開發板取代原先的工業用主機板作為運算核心。
