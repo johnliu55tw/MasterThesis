@@ -27,6 +27,7 @@
 % Required packages
 \RequirePackage[top=3cm,left=3cm,bottom=3cm,right=3cm]{geometry}
 \RequirePackage{xeCJK}
+\RequirePackage{indentfirst}
 \RequirePackage{setspace}
 \RequirePackage{titlesec}
 \RequirePackage{titletoc}
@@ -74,16 +75,16 @@
 \titleformat{\chapter}{\centering\Huge\bfseries}{\zhnumber{\thechapter}、}{0pt}{}
 
 % Setting table of contents format
-\titlecontents{chapter}[0em]{}{\makebox[3.0em][l]{\zhnumber{\thecontentslabel}、}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{chapter}[0em]{}{\zhnumber{\thecontentslabel}、}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 \titlecontents{section}[2em]{}{\makebox[3.0em][l]{\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 \titlecontents{subsection}[4em]{}{\makebox[3.0em][l]{\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 
 % Setting list of figure format
-\titlecontents{figure}[0em]{}{\makebox[3.5em][l]{\figurename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{figure}[0em]{}{\makebox[4.0em][l]{\figurename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 \titlecontents{subfigure}[2em]{}{\makebox[3.0em][l]{(\thecontentslabel)}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 
 % Setting list of table format
-\titlecontents{table}[0em]{}{\makebox[3.5em][l]{\tablename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
+\titlecontents{table}[0em]{}{\makebox[4.0em][l]{\tablename\thecontentslabel}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 \titlecontents{subtable}[2em]{}{\makebox[3.0em][l]{(\thecontentslabel)}}{}{\titlerule*[0.7pc]{.}\contentspage}[\vspace{-0.6cm}]
 
 % Space between lines
@@ -93,7 +94,7 @@
 \setlength{\parskip}{0.5cm}
 
 % Set first indent to twice the width of an character
-\setlength{\parindent}{2em}
+\input{CJKindent.tex}
 
 \DeclareRobustCommand{\keywordszh}[1]{\noindent{\textbf{關鍵字：}#1}}
 \DeclareRobustCommand{\keywordsen}[1]{\noindent{\textbf{Keywords:} #1}}

@@ -23,7 +23,6 @@
 而本論文使用原先的底盤開發了第二代實驗平台Yun-Trooper II，
 如圖~\ref{f:YunTrooperII}~所示，其使用嵌入式單板電腦搭配Linux作業系統，
 並且簡化了所需要的週邊配備，使得體積與重量大幅降低，開發成本也大幅下降。
-
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
@@ -81,8 +80,8 @@ Karney~\cite{Karney:2013:Algorithms_for_Geodesics}提出了適用於現代電腦
 
 \subsection{路徑規劃}
 依路徑的規劃範圍可分為全域路徑規劃與部份路徑規劃（Global/Local Path Planning），
-有時也會以路徑規劃（Path Planning）與障礙物迴避
-（Obstacle Avoidance）的名稱來區別~\cite{Siegwart:2004:IAMR}。
+有時也會以路徑規劃（Path Planning）與避障（Obstacle Avoidance）
+的名稱來區別~\cite{Siegwart:2004:IAMR}。
 全域路徑規劃是藉由地圖的輔助，根據不同的需求（最短路徑、最少轉向、最容易通過等）
 與地圖上已知的障礙物，像是建築物、走廊等，規劃出不同的路徑；
 部分路徑規劃則是利用感測器所量測到的環境資訊，對當下的環境變化做出反應，
@@ -106,7 +105,7 @@ Dynamic Window Approach~\cite{Thrun:1997:DW}
 接著考慮動態拘束後找出可行方向，並計算最佳解。
 
 由於Yun-Trooper II不具速度感測器，本論文採用增強後的Vector Field Histogram演算法：
-Vector Field Histogram Plus~\cite{Ulrich:1998:VFHPlus}做為基礎，
+Vector Field Histogram Plus（VFH$^+$）~\cite{Ulrich:1998:VFHPlus}做為基礎，
 改進其功能使之能夠利用光學雷達得到的資訊。
 
 \section{論文架構}
