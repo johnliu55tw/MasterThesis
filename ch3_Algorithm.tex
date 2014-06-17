@@ -1,13 +1,22 @@
 % Ch3 Algorithm
-\chapter{路徑規劃}
-\label{c:algorithm}
+\chapter{路徑規劃與控制法則}
+\label{c:obstacle_avoidance}
 
-本論文利用目標點位置與車輛位置之間的相對關係，以及車輛本身相對於地面的方位角，
+本論文利用目標點位置與車輛位置之間的相對關係，以及車輛本身相對於地面的方位角$\psi$，
 計算出目標點相對於車輛的角度$\Theta_t$與最短距離$\sigma_t$。
 由於位置單位為經緯度，\ref{sec:target}節介紹了由經緯度計算$\Theta_t$與$\sigma_t$
 之方法。而利用$\Theta_t$、$\sigma_t$與光學雷達所得到的環境資訊，
 本論文基於VFH+~\cite{Ulrich:1998:VFHPlus}開發出一避障演算法計算出前進方向，
 以避開障礙物，\ref{sec:vfhplus}節介紹其架構。
+
+由於位置量測存在誤差，因此當目標點與車輛的距離$\sigma_t$小於一設定的距離$R_p$時，
+便判定車輛已到達該目標點，並開始導航至下一目標點。導航的完整流程圖如圖~\ref{f:navigation_flow}所示：
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/navigation_flow}
+	\caption{導航流程圖}
+	\label{f:navigation_flow}
+\end{figure}
 
 \section{目標方向計算}
 \label{sec:target}
@@ -264,7 +273,6 @@ Vector Field Histogram Plus（VFH+）~\cite{Ulrich:1998:VFHPlus}
 原先的VFH+使用四個階段的計算逐一減少資訊量並找出轉向角度，而為了使用在光學雷達上，
 本論文一樣使用四個階段的計算，但修改其計算方式與順序以便使用於光學雷達。
 前面三個階段著重於根據機器人的拘束找出可通過的方向，最後一個階段則是計算最佳方向。
-另外，除了計算避障的轉向外，VFH+也可根據環境資訊控制機器人之速度，
 
 \subsubsection{階段一、極座標直方圖}
 光學雷達所量測到的資訊可表示為$d_i$與$\theta_i$，$d_i$為第$i$個量測到的距離，
@@ -358,7 +366,7 @@ $a$與$b$皆為正值。藉由調整此處的$a$與$b$，使用者可調整VFH+�
 \end{align}
 
 在計算邊界縮減時，有時會發生邊界交疊$\theta_r + \delta_r > \theta_l - \delta_l$的情況，
-這代表此安全空間無法讓機器人通過，此時該安全空間會被捨棄，如圖~\ref{f:width_overlapped}所示。
+這代表此安全空間無法讓機器人通過，如圖~\ref{f:width_overlapped}所示。
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[t]{0.5\textwidth}
@@ -427,7 +435,11 @@ VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角�
 根據安全空間$V_j$的寬度，可以從每個$V_j$中找到一個或多個候選方向$c$，
 接著使用成本函數於這些候選方向中找出最佳解。
 對於安全空間的寬度，本論文使用其邊界向量之間的角度差$\epsilon = \theta_l - \theta_r$做為判斷標準，
-使用一角度閾值$\tau_a$將安全空間分為兩種：狹窄與寬廣。
+使用一角度閾值$\tau_a$與邊界交疊的情況將安全空間分為三種：交疊、狹窄與寬廣。
+
+由於光學雷達在量測時是逆時針方向從$-120\,^{\circ}$掃描至$120\,^{\circ}$，在搜尋安全空間時也是同一方向，
+因此每個安全空間的右邊界角度一定小於左邊界角度。所以，若是右邊界角度大於左邊界代表發生了邊界交疊，
+此時該安全空間將會被捨棄，不會產生任何候選方向。
 
 對狹窄（$\epsilon < \tau_a$）的安全空間來說，只有正中央的方向是唯一的候選方向：
 \begin{equation}
@@ -439,7 +451,7 @@ VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角�
 \begin{align}
 	c_r &= \theta_r \nonumber \\
 	c_l &= \theta_l \nonumber \\
-	c_t &= \Theta_t 
+	c_T &= \Theta_t 
 \end{align}
 
 最後使用一成本函數$G$於這些候選轉向角中找出最佳解：
@@ -457,26 +469,161 @@ VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角�
 第三項$(|c - c_{t-1}|)$則代表候選角與前一次選擇的轉向角之間的差距。
 這個差距越大代表機器人的越容易偏離目前的航向，造成擺盪的現象。
 
-$\mu_1,\mu_2,\mu_3$則是相對應的權重系數，藉由調整這三個系數之間的相對大小，
+$\mu_1,\mu_2,\mu_3$則是相對應的權重係數，藉由調整這三個係數之間的相對大小，
 機器人的導航特性就能夠被調整，而於成本函數中產生最小值的候選方向即為最佳方向$c_t$。
 
-\subsubsection{速度控制}
-機器人的速度是藉由環境的障礙物密度來控制，若密度越高則機器人速度就必須越慢，反之則越快。
-障礙物密度可藉由一密度函數$D$與一距離閾值$\tau_{obj}$計算：
+\subsubsection{無候選方向}
+VFH+對機器人的轉向有許多的限制，因此有時會發生無候選方向的情況。
+這種情況時常發生於狹窄的空間，同時前方已無路可走且機器人之機構限制無法迴轉離開時。
+然而，有時是因為VFH+演算法的特性造成誤判，此問題將會使用速度控制來補償。
+
+\subsection{轉向控制法則}
+Yun-Trooper II的轉向控制使用比例控制（Proportional Control），其誤差量即為VFH+演算法計算得來的$c_t$，
+因此將$c_t$乘上一增益值$K$後即可當作轉向控制命令。
+
+Yun-Trooper II的轉向機構是由伺服馬達所控制，而伺服馬達是由PWM訊號的脈波寬度所控制，與Duty無關。
+經過測試後，脈波寬度與轉向機構關係如表~\ref{t:steering}所示。
+\begin{table}[h!]
+	\centering
+	\caption{轉向機構與PWM脈波寬度關係表}
+	\begin{tabular}{| l | c |}
+		\hline
+		脈波寬度	& 轉向機構位置 \\ \hline
+		1.5ms		& 正中央 \\ \hline
+		1.8ms		& 右死點 \\ \hline
+		1.2ms		& 左死點 \\ \hline
+	\end{tabular}
+	\label{t:steering}
+\end{table}
+
+\section{速度控制}
+本節將討論速度控制演算法，包含無候選方向情況發生時的補償。
+
+\subsection{障礙物密度}
+原先的VFH+使用障礙物密度函數$D$來計算機器人於該環境狀態下的速度，
+而此函數可使用光學雷達的量測結果$d_i$與最大量測距離$d_{max}$計算：
 \begin{equation}
-	D(d_i) = \frac{1}{N}\sum_{i=1}^{N}H_i
+	D(d_i) = 1 - \frac{1}{N}\sum_{i=1}^{N}{\frac{d_i}{d_{max}}}
 \end{equation}
-其中
+此函數所計算之值將會落在$0$與$1$之間，越接近$1$代表環境中的障礙物距離越近或數量較多（密度較高）；
+反之越接近$0$代表障礙物距離越遠或數量較少（密度較低）。因此，若設定機器人之最大速度$v_{max}$與最小速度$v_{min}$，
+其速度$v$可依下式計算：
 \begin{equation}
-	H_i = 
-	\begin{cases}
-		0	& \textrm{if } d_i \geq \tau_{obj} \\
-		1	& \textrm{if } d_i < \tau_{obj} \\
-	\end{cases}
+	v = v_{min} + (1-D(d_i)) \cdot (v_{max} - v_{min})
 \end{equation}
 
-得到環境密度$D(d_i)$後，可設定一最大速度值$v_{max}$與最小速度值$v_{min}$，則速度$v$可由下式計算：
+雖然使用障礙物密度來計算速度是相當有效的方式，但此密度僅使用當時所處的環境進行計算，
+並沒有將機器人當下的速度加入考慮。然而在進行路徑規劃時，若是機器人的速度過快，則機器人可能無法成功進行迴避，
+來不及做出轉向反應，因此機器人當下的速度也是一個相當重要的因素。
+
+\subsection{環境變化率}
+由於本論文使用的實驗平台Yun-Trooper II並不具備速度感測器，無法直接獲得機器人的速度。
+因此，本論文在原先的障礙物密度中增加一項「環境變化率」$\delta$，做為目前機器人速度的補償值。
+
+環境變化率$\delta$的概念為，假設機器人位於一靜態環境中（障礙物的位置不隨時間而改變），
+則若是量測到的環境變化相當大，代表機器人的速度較高；反之則代表速度較低。
+而環境變化又以正前方的變化最為重要，因為這代表機器人接近正前方障礙物的速度。
+因此，設定一角度範圍，例如正前方左右各$20\,^{\circ}$，對所有位於此範圍內的光學雷達量測值$d_j$，
+其環境變化率可依下式計算：
 \begin{equation}
-	v = (v_{max}-v_{min}) \cdot (1-D(d_i)) + v_{min}
+	\delta = \frac{1}{N}\sum_{j}\frac{(d_j)_t - (d_j)_{t-1}}{T}
+	\label{e:speed_control}
 \end{equation}
+其中$(d_j)_t$代表當下的環境量測值；$(d_j)_{t-1}$代表上一次的環境量測值；
+$T$代表兩次量測的時間間隔；$N$代表範圍內的量測值個數。
+
+對路徑規劃來說，最重要的是以高速接近障礙物時能夠成功的減速，對加速的要求則相對較低。因此，在計算環境變化率時，
+只將變化率$d_t - d_{t-1}$為負值（障礙物接近機器人）的方向納入計算，將變化率為正值的排除在外：
+\begin{equation}
+	\delta = \frac{1}{N}\sum_{j}\frac{P((d_j)_t - (d_j)_{t-1})}{T}
+\end{equation}
+其中
+\begin{equation*}
+	P(x) = 
+	\begin{cases}
+		x	& \textrm{if } x > 0 \\
+		0	& \textrm{otherwise} \\
+	\end{cases}
+\end{equation*}
+
+為了將環境變化率與環境密度能夠一起計算，必須讓環境變化率的範圍落在$0$與$1$之間。
+因此，將上式算出的$\delta$除以機器人的最大速度$v_{max}$便可得到落在$0$與$1$之間的環境變化率。
+\begin{equation}
+	\delta = -\frac{1}{N \cdot v_{max}}\sum_{j}\frac{P((d_j)_t - (d_j)_{t-1})}{T}
+\end{equation}
+$\delta$之值越接近$-1$代表環境變化越大，障礙物以較高的速度接近機器人；反之則代表障礙物以較低的速度接近。
+
+最後，將環境變化率$\delta$列入考慮後，速度$v$可依下式計算：
+\begin{equation}
+	v = v_{min} + (1-\frac{D(d_i)+\delta}{2}) \cdot (v_{max} - v_{min})
+\end{equation}
+
+\subsection{無候選方向}
+本論文使用的避障演算法有時會發生誤判，將可通過的空間判定為無法通過造成導航停止。
+這通常發生在機器人進入了較狹窄的空間中，且可通過之方向與機器人行進方向垂直時，圖~\ref{f:no_way_to_go}的情況即為一範例。
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{figures/NoWayToGo_Real}
+		\caption{實際情況}
+		\label{f:no_way_to_go_real}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{figures/NoWayToGo}
+		\caption{光學雷達量測結果}
+		\label{f:no_way_to_go_measured}
+	\end{subfigure}
+	\caption{無候選轉向角示意圖}
+	\label{f:no_way_to_go}
+\end{figure}
+在圖~\ref{f:no_way_to_go_measured}中，藍色虛線為Yun-Trooper II以最小迴轉半徑右轉之軌跡，
+可以看到右側的空間的確足以讓Yun-Trooper II通過，但在路徑規劃演算法中該空間會發生邊界交疊，因此被判定為無法通過。
+
+\subsection{碰撞偵測}
+因為避障演算法在某些情況下會發生誤判的情形，造成導航停止，所以本論文在機器人的導航過程中不斷偵測碰撞是否即將發生，
+使用碰撞偵測做為導航停止與否的指標，而非前進方向。在本論文中，碰撞偵測可分為兩階段：
+第一階段使用設定的機器人尺寸，偵測障礙物是否已經發生碰撞；
+第二階段是偵測機器人的行進方向是否有障礙物存在，偵測碰撞是否即將發生。
+只要其中一階段偵測到碰撞即代表碰撞發生，機器人將會停止前進。
+
+\subsubsection{第一階段}
+在設定機器人尺寸時，為了安全起見，通常會讓設定的尺寸比真實尺寸還大。
+因此，第一階段的「已經發生碰撞」實際上代表的是，障礙物已經進入了設定的尺寸範圍內，而非真的發生了碰撞。
+而由於在計算時已經將機器人的尺寸簡化為半徑為$w_s$的圓形，因此只要判斷光學雷達的量測值$d_i$是否小於$w_s$，
+即可判定碰撞是否發生，如圖~\ref{f:collision_1stage}所示。
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{figures/collision_1stage}
+	\caption{第一階段碰撞偵測示意圖}
+	\label{f:collision_1stage}
+\end{figure}
+
+\subsubsection{第二階段}
+若單純只使用機器人尺寸來偵測碰撞，在機器人速度較快時可能無法及時停止，讓機器人與障礙物實際發生碰撞，造成損壞。
+因此，第二階段設定一距離$x$，利用車身尺寸$w_s$與轉向角度$c_t$建立一碰撞偵測範圍$\theta$，預先偵測行進路線上的障礙物，
+以防止上述情況發生，如圖~\ref{f:collision_2stage}與式~\ref{e:collision_range}所示。
+\begin{equation}
+	\theta = \arctan{\frac{w_s}{x}}
+	\label{e:collision_range}
+\end{equation}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.45\textwidth]{figures/collision_2stage}
+	\caption{第二階段碰撞偵測示意圖}
+	\label{f:collision_2stage}
+\end{figure}
+
+得到$\theta$後，可得到一角度範圍$\theta_r : c_t + \theta \leq \theta_r \leq c_t - \theta$。
+在此角度範圍內的光學雷達量測值$d_i$若小於預先設定的距離$x$，如圖~\ref{f:collision_2stage}所示，
+代表即將發生碰撞。
+
+\subsection{速度控制法則}
+綜合以上演算法，本論文之速度控制法則如下所述：
+\begin{enumerate}
+	\item 使用避障演算法計算轉向角度$c_t$。
+	\item 若$c_t$存在則輸出相對應的轉向命令，同時使用~\ref{e:speed_control}式計算速度$v$；
+		若$c_t$不存在則使用前一次的轉向角度$c_{t-1}$輸出轉向命令，並將速度$v$設為最低速度$v_{min}$。
+	\item 使用碰撞偵測演算法偵測是否發生碰撞，若是則停止導航，速度輸出為零；否則輸出上一步驟所計算的速度$v$。
+\end{enumerate}
+
 
