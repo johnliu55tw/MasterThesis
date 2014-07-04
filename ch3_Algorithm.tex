@@ -2,8 +2,16 @@
 \chapter{路徑規劃與控制法則}
 \label{c:obstacle_avoidance}
 
-本論文利用目標點位置與車輛位置之間的相對關係，以及車輛本身相對於地面的方位角$\psi$，
-計算出目標點相對於車輛的角度$\Theta_t$與最短距離$\sigma_t$。
+本論文之路徑規劃係利用目標點位置與車輛位置之間的相對關係，以及車輛本身相對於地面的方位角$\psi$，
+計算出目標點相對於車輛的角度$\Theta_t$與最短距離$\sigma_t$，並使用這些參數將機器人依序導引至目標點，
+同時在導航的過程中必須要避開障礙物，如圖~\ref{f:path_planning}所示。
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{figures/algorithm/pathplanning}
+	\caption{路徑規劃目標}
+	\label{f:path_planning}
+\end{figure}
+
 由於位置單位為經緯度，\ref{sec:target}節介紹了由經緯度計算$\Theta_t$與$\sigma_t$
 之方法。而利用$\Theta_t$、$\sigma_t$與光學雷達所得到的環境資訊，
 本論文基於VFH+~\cite{Ulrich:1998:VFHPlus}開發出一避障演算法計算出前進方向，
@@ -13,7 +21,7 @@
 便判定車輛已到達該目標點，並開始導航至下一目標點。導航的完整流程圖如圖~\ref{f:navigation_flow}所示：
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/navigation_flow}
+	\includegraphics[width=0.8\textwidth]{figures/algorithm/navigation_flow}
 	\caption{導航流程圖}
 	\label{f:navigation_flow}
 \end{figure}
@@ -33,7 +41,7 @@ XY平面與地球的赤道平面重合，X軸指向經度$0\,^{\circ}$，
 Y軸則是指向東經$90\,^{\circ}$，如圖~\ref{f:ecef}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=12cm]{figures/ECEF}
+	\includegraphics[width=12cm]{figures/algorithm/ECEF}
 	\caption{ECEF座標系統}
 	\caption*{來源：MTi-G Manual}
 	\label{f:ecef}
@@ -45,7 +53,7 @@ Y軸則是指向東經$90\,^{\circ}$，如圖~\ref{f:ecef}所示。
 此處的橢球為一雙軸橢球（Biaxial Ellipsoid），為一橢圓以短軸為旋轉軸旋轉一圈後得到的表面。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=12cm]{figures/ellipsoid}
+	\includegraphics[width=12cm]{figures/algorithm/ellipsoid}
 	\caption{橢球座標系}
 	\caption*{來源：MTi-G Manual}
 	\label{f:ellipsoid}
@@ -75,7 +83,7 @@ MTi-G位置感測器使用WGS84大地基準，而這個基準也是一般GPS所�
 如圖~\ref{f:geodetic_latitude}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/geodetic_latitude}
+	\includegraphics[width=6cm]{figures/algorithm/geodetic_latitude}
 	\caption{測地緯度示意圖}
 	\label{f:geodetic_latitude}
 \end{figure}
@@ -89,7 +97,7 @@ MTi-G位置感測器使用WGS84大地基準，而這個基準也是一般GPS所�
 如圖~\ref{f:geodesic}所示~\cite{Jekeli:2006:GRSinGeodesy}。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/geodesic}
+	\includegraphics[width=6cm]{figures/algorithm/geodesic}
 	\caption{測地線}
 	\label{f:geodesic}
 \end{figure}
@@ -112,21 +120,22 @@ MTi-G位置感測器使用WGS84大地基準，而這個基準也是一般GPS所�
 即航空學上常用的Roll($\phi$)、Pitch($\theta$)與Yaw($\psi$)角。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{figures/LTP}
+	\includegraphics[width=\textwidth]{figures/algorithm/LTP}
 	\caption{區域切平面示意圖}
 	\caption*{來源：MTi-G Manual}
 	\label{f:LTP}
 \end{figure}
 
-上一節所述之方位角$\alpha_1$為相對於北方順時針方向所量測的角度；
-Yaw角度$\psi$為相對於北方逆時針方向量測之角度。因此，目標方向$\Theta_t$相對於車輛之角度可依下式計算：
+上一節所述之方位角$\alpha_1$為使用地理座標系統$\mathbf{G}$，相對於北方順時針方向所量測的角度；
+Yaw角度$\psi$為使用區域座標系統$\mathbf{L}$，相對於北方逆時針方向量測之角度。
+因此，目標方向$\Theta_t$於區域座標系統$\mathbf{L}$，相對於車輛之角度可依下式計算：
 \begin{equation}
-	\Theta_t = -\alpha_1 - \psi
+	[\Theta_t]_{\mathbf{L}} = -[\alpha_1]_{\mathbf{G}} - [\psi]_{\mathbf{L}}
 \end{equation}
 若$\Theta_t$為負值代表目標在車輛右側，若為正值則於位車輛左側，如圖~\ref{f:target_angle}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=5cm]{figures/TargetAngle}
+	\includegraphics[width=\textwidth]{figures/algorithm/TargetAngle}
 	\caption{目標方向相對於車輛之角度}
 	\label{f:target_angle}
 \end{figure}
@@ -151,7 +160,7 @@ Artificial Potential Field~\cite{Khatib:1985:APF}
 指引機器人遠離障礙物並接近目標點。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=10cm]{figures/demo_apf_whitebg}
+	\includegraphics[width=10cm]{figures/algorithm/demo_apf_whitebg}
 	\caption{位能場}
 	\caption*{來源：people.csail.mit.edu}
 	\label{f:potential_field}
@@ -164,10 +173,10 @@ Artificial Potential Field~\cite{Khatib:1985:APF}
 \subsubsection{Vector Field Histogram}
 Vector Field Histogram（VFH）~\cite{Borenstein:1991:VFH}
 將環境資訊以極座標直方圖（Polar Histogram）$D$的方式表示，橫軸為障礙之角度$\theta$，縱軸為其距離$d$，
-如圖~\ref{f:vfh}所示。接著找出可供機器人通過的空間，並計算其相對應的轉向角度。
+接著找出可供機器人通過的空間，並計算其相對應的轉向角度，如圖~\ref{f:vfh}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{figures/VFHTotal.png}
+	\includegraphics[width=\textwidth]{figures/algorithm/VFHTotal.png}
 	\caption{極座標直方圖}
 	\label{f:vfh}
 \end{figure}
@@ -198,7 +207,7 @@ Curvature Velocity Method（CVM）~\cite{Simmons:1996:CVM}
 如圖~\ref{f:cvm_curvature}所示。因此，CVM使用速度空間$(\nu,\omega)$來做路徑規劃，而非卡式座標空間。
 \begin{figure}
 	\centering
-	\includegraphics[width=8cm]{figures/CVM1}
+	\includegraphics[width=8cm]{figures/algorithm/CVM1}
 	\caption{CVM下的機器人運動軌跡}
 	\label{f:cvm_curvature}
 \end{figure}
@@ -235,12 +244,12 @@ Dynamic Window Approach（DW）~\cite{Thrun:1997:DW}
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[t]{0.6\textwidth}
-		\includegraphics[width=\textwidth]{figures/DW_cartesian}
+		\includegraphics[width=\textwidth]{figures/algorithm/DW_cartesian}
 		\caption{實際環境資訊}
 		\label{f:DW_cartesian}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.6\textwidth}
-		\includegraphics[width=\textwidth]{figures/DW_velocity}
+		\includegraphics[width=\textwidth]{figures/algorithm/DW_velocity}
 		\caption{速度空間中的環境資訊}
 		\label{f:DW_velocity}
 	\end{subfigure}
@@ -255,7 +264,7 @@ Dynamic Window Approach（DW）~\cite{Thrun:1997:DW}
 隨著機器人目前的速度不同此視窗的位置也會不斷改變，如圖~\ref{f:dynamic_window}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=10cm]{figures/dynamic_window}
+	\includegraphics[width=10cm]{figures/algorithm/dynamic_window}
 	\caption{動態視窗示意圖}
 	\caption*{來源：The Dynamic Window Approach to Collision Avoidance}
 	\label{f:dynamic_window}
@@ -279,7 +288,7 @@ Vector Field Histogram Plus（VFH+）~\cite{Ulrich:1998:VFHPlus}
 $\theta_i$則為$d_i$所對應的角度，如圖~\ref{f:LiDar_measurement}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=8cm]{figures/LiDar_measurement}
+	\includegraphics[width=8cm]{figures/algorithm/LiDar_measurement}
 	\caption{光學雷達量測示意圖}
 	\label{f:LiDar_measurement}
 \end{figure}
@@ -294,12 +303,12 @@ $a$與$b$皆為正值。藉由調整此處的$a$與$b$，使用者可調整VFH+�
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.7\textwidth}
-		\includegraphics[width=\textwidth]{figures/polar_histogram}
+		\includegraphics[width=\textwidth]{figures/algorithm/polar_histogram}
 		\caption{$d_i$}
 		\label{f:polar_histogram_original}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.7\textwidth}
-		\includegraphics[width=\textwidth]{figures/polar_histogram_modified}
+		\includegraphics[width=\textwidth]{figures/algorithm/polar_histogram_modified}
 		\caption{$P_i$}
 		\label{f:polar_histogram_modified}
 	\end{subfigure}
@@ -309,13 +318,13 @@ $a$與$b$皆為正值。藉由調整此處的$a$與$b$，使用者可調整VFH+�
 
 \subsubsection{階段二、安全空間}
 為了找出可供機器人通過的空間，VFH藉由一閾值$\tau$過濾出所有視為安全的距離，
-而一段連續的安全距離就代表一個可通過的安全空間$V_j$，由一組邊界向量$(\mathbf{B_l},\mathbf{B_r})_j$定義，
+而一段連續的安全距離就代表一個可通過的安全空間$V_j$，由一組邊界向量$(\mathbf{B_L},\mathbf{B_R})_j$定義，
 定義其左邊界與右邊界的角度$\theta$與障礙物的距離$d$，視為機器人所能通過的方向：
 \begin{align}
-	\mathbf{B_l}	&= \begin{bmatrix}
+	\mathbf{B_L}	&= \begin{bmatrix}
 				\theta_l & d_l
 			   \end{bmatrix} \nonumber \\
-	\mathbf{B_r}	&= \begin{bmatrix}
+	\mathbf{B_R}	&= \begin{bmatrix}
 				\theta_r & d_r
 			   \end{bmatrix}
 	\label{e:boundary}
@@ -338,12 +347,12 @@ $a$與$b$皆為正值。藉由調整此處的$a$與$b$，使用者可調整VFH+�
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.8\textwidth}
-		\includegraphics[width=\textwidth]{figures/binary_histogram_1}
+		\includegraphics[width=\textwidth]{figures/algorithm/binary_histogram_1}
 		\caption{單一閾值}
 		\label{f:binary_histogram_1}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.8\textwidth}
-		\includegraphics[width=\textwidth]{figures/binary_histogram_2}
+		\includegraphics[width=\textwidth]{figures/algorithm/binary_histogram_2}
 		\caption{雙閾值}
 		\label{f:binary_histogram_2}
 	\end{subfigure}
@@ -354,52 +363,40 @@ $a$與$b$皆為正值。藉由調整此處的$a$與$b$，使用者可調整VFH+�
 原先的VFH忽略了機器人本身的幾何尺寸，而本論文使用縮小安全空間$V_j$邊界的方式來增加幾何拘束，
 此時便可將機器人視為一質點。假設機器人之尺寸為半徑$w_s$的圓，則將$V_j$之邊界同樣縮小$w_s$後
 便可將機器人視為一點，如圖~\ref{f:width}所示。
-縮減後的安全空間$\hat{V_j} = (\hat{\mathbf{B_l}},\hat{\mathbf{B_r}})_j$可由式~\ref{e:width}計算：
+縮減後的安全空間$\hat{V_j} = (\hat{\mathbf{B_L}},\hat{\mathbf{B_R}})_j$可由式~\ref{e:width}計算：
 \begin{align}
-	\hat{\mathbf{B_l}}	&= \begin{bmatrix}
+	\hat{\mathbf{B_L}}	&= \begin{bmatrix}
 					\theta_l - \delta_l & d_l\cos\delta_l
 				   \end{bmatrix},\delta_l = \arcsin({\frac{w_s}{d_l}}) \nonumber \\
-	\hat{\mathbf{B_r}}	&= \begin{bmatrix}
+	\hat{\mathbf{B_R}}	&= \begin{bmatrix}
 					\theta_r + \delta_r & d_r\cos\delta_r
 				   \end{bmatrix},\delta_r = \arcsin({\frac{w_s}{d_r}})
 	\label{e:width}
 \end{align}
-
-在計算邊界縮減時，有時會發生邊界交疊$\theta_r + \delta_r > \theta_l - \delta_l$的情況，
-這代表此安全空間無法讓機器人通過，如圖~\ref{f:width_overlapped}所示。
 \begin{figure}[h!]
 	\centering
-	\begin{subfigure}[t]{0.5\textwidth}
-		\includegraphics[width=\textwidth]{figures/width}
-		\caption{邊界縮減}
-		\label{f:width}
-	\end{subfigure}
-	~
-	\begin{subfigure}[t]{0.32\textwidth}
-		\includegraphics[width=\textwidth]{figures/width_overlapped}
-		\caption{邊界交疊}
-		\label{f:width_overlapped}
-	\end{subfigure}
-	\caption{邊界處理}
+	\includegraphics[width=0.5\textwidth]{figures/algorithm/width}
+	\caption{邊界縮減}
+	\label{f:width}
 \end{figure}
 
 \subsubsection{階段三、Blocked Directions}
-VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角度都是可達成的，然而這對某些轉向機構來說是不可能的。
+VFH並沒有將機器人的動態拘束納入考慮，允許所有轉向角度的存在，然而這對某些轉向機構來說是不可能的。
 因此VFH+使用機器人的最小迴轉半徑$R$與機器人尺寸$w_s$，計算出被障礙物所限制住的轉向角度$(\phi_l,\phi_r)$。
 而原先的VFH+僅使用迴轉半徑$R$來計算，而本論文將機器人尺寸$w_s$加入計算，形成與迴轉半徑同心但半徑為$R+w_s$的圓，
 如圖~\ref{f:block_directions}所示。
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/block_directions}
+	\includegraphics[width=0.8\textwidth]{figures/algorithm/blocked_directions}
 	\caption{轉向角度限制}
 	\label{f:block_directions}
 \end{figure}
 
-為了找出$(\phi_l,\phi_r)$，首先使用與光學雷達相同的$\theta_i$建立一偵測距離用的直方圖$D_i$，
-如圖~\ref{f:detection_histogram}所示，其可由式~\ref{e:detection_histogram}計算。
+為了找出$(\phi_l,\phi_r)$，首先使用與光學雷達相同的$\theta_i$建立一偵測用的直方圖$D_i$，
+偵測障礙物是否阻擋了轉向角度，如圖~\ref{f:detection_histogram}所示。其可由式~\ref{e:detection_histogram}計算。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{figures/detection_histogram}
+	\includegraphics[width=0.5\textwidth]{figures/algorithm/detection_histogram}
 	\caption{偵測直方圖示意圖}
 	\label{f:detection_histogram}
 \end{figure}
@@ -416,7 +413,7 @@ VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角�
 環境與這些直方圖之間的轉換如圖~\ref{f:histogram_transform}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{figures/histogram_transform}
+	\includegraphics[width=\textwidth]{figures/algorithm/histogram_transform}
 	\caption{直方圖轉換}
 	\label{f:histogram_transform}
 \end{figure}
@@ -432,26 +429,46 @@ VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角�
 \end{enumerate}
 
 \subsubsection{階段四、Selection of Steering Direction}
-根據安全空間$V_j$的寬度，可以從每個$V_j$中找到一個或多個候選方向$c$，
+根據安全空間$\hat{V_j}$的寬度，可以從每個$\hat{V_j}$中找到一個或多個候選方向$c$，
 接著使用成本函數於這些候選方向中找出最佳解。
 對於安全空間的寬度，本論文使用其邊界向量之間的角度差$\epsilon = \theta_l - \theta_r$做為判斷標準，
-使用一角度閾值$\tau_a$與邊界交疊的情況將安全空間分為三種：交疊、狹窄與寬廣。
+使用一角度閾值$\tau_a$與邊界縮減的情況將安全空間分為三種：交疊、狹窄與寬廣，如圖~\ref{f:epsilon_situation}所示。
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.25\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/epsilon_situation_1}
+		\caption{交疊}
+		\label{f:epsilon_1}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/epsilon_situation_2}
+		\caption{狹窄}
+		\label{f:epsilon_2}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/epsilon_situation_3}
+		\caption{寬廣}
+		\label{f:epsilon_3}
+	\end{subfigure}
+	\caption{邊界分類}
+	\label{f:epsilon_situation}
+\end{figure}
 
 由於光學雷達在量測時是逆時針方向從$-120\,^{\circ}$掃描至$120\,^{\circ}$，在搜尋安全空間時也是同一方向，
-因此每個安全空間的右邊界角度一定小於左邊界角度。所以，若是右邊界角度大於左邊界代表發生了邊界交疊，
-此時該安全空間將會被捨棄，不會產生任何候選方向。
+因此每個安全空間的右邊界角度一定小於左邊界角度。因此，若是右邊界角度大於左邊界代表發生了邊界交疊，
+此時該安全空間將會被捨棄，不會產生任何候選方向，如圖~\ref{f:epsilon_1}所示。
 
-對狹窄（$\epsilon < \tau_a$）的安全空間來說，只有正中央的方向是唯一的候選方向：
+圖~\ref{f:epsilon_2}為狹窄（$0 < \epsilon < \tau_a$）的安全空間，此時只有正中央的方向是唯一的候選方向：
 \begin{equation}
 	c_n = \frac{\theta_l + \theta_r}{2}
 \end{equation}
 
-而對寬廣（$\epsilon > \tau_a$）的安全空間來說則有兩個，分為兩邊界向量所對應的角度。
-另外若目標方向$\Theta_t$位於該安全空間中，則目標方向也會是候選角度的其中之一：
+圖~\ref{f:epsilon_3}則為寬廣（$\epsilon > \tau_a$）的安全空間。
+於此空間中候選角度有二個或三個，分別為兩邊界向量所對應的角度，以及當目標方向$\Theta_t$落在此範圍中，則$\Theta_t$也是候選角度之一。
 \begin{align}
 	c_r &= \theta_r \nonumber \\
 	c_l &= \theta_l \nonumber \\
-	c_T &= \Theta_t 
+	c_T &= \Theta_t \text{ , if } \theta_l < \Theta_t < \theta_r 
 \end{align}
 
 最後使用一成本函數$G$於這些候選轉向角中找出最佳解：
@@ -472,33 +489,100 @@ VFH並沒有將機器人的動態拘束納入考慮，其假設所有轉向角�
 $\mu_1,\mu_2,\mu_3$則是相對應的權重係數，藉由調整這三個係數之間的相對大小，
 機器人的導航特性就能夠被調整，而於成本函數中產生最小值的候選方向即為最佳方向$c_t$。
 
+\subsection{問題討論與補償}
+\label{subsec:problem}
+VFH+演算法在大部分的情況下都能夠成功找出正確的轉向角度以迴避障礙物，然而有兩個情況會導致計算錯誤，
+以下將討論這兩種情況。
+
 \subsubsection{無候選方向}
 VFH+對機器人的轉向有許多的限制，因此有時會發生無候選方向的情況。
 這種情況時常發生於狹窄的空間，同時前方已無路可走且機器人之機構限制無法迴轉離開時。
-然而，有時是因為VFH+演算法的特性造成誤判，此問題將會使用速度控制來補償。
-
-\subsection{轉向控制法則}
-Yun-Trooper II的轉向控制使用比例控制（Proportional Control），其誤差量即為VFH+演算法計算得來的$c_t$，
-因此將$c_t$乘上一增益值$K$後即可當作轉向控制命令。
-
-Yun-Trooper II的轉向機構是由伺服馬達所控制，而伺服馬達是由PWM訊號的脈波寬度所控制，與Duty無關。
-經過測試後，脈波寬度與轉向機構關係如表~\ref{t:steering}所示。
-\begin{table}[h!]
+然而，有時是因為VFH+演算法的特性造成誤判，將可通過空間判定為無法通過，圖~\ref{f:no_way_to_go}即為一誤判的例子。
+在圖~\ref{f:no_way_to_go_measured}中，藍色虛線為機器人的最小迴轉半徑，可看到右前方的確擁有足夠的空間供機器人通過，
+然而此時VFH+會因為邊界交疊的關係將此安全空間捨棄，造成無候選方向的情形，進而讓導航停止。
+\begin{figure}[h!]
 	\centering
-	\caption{轉向機構與PWM脈波寬度關係表}
-	\begin{tabular}{| l | c |}
-		\hline
-		脈波寬度	& 轉向機構位置 \\ \hline
-		1.5ms		& 正中央 \\ \hline
-		1.8ms		& 右死點 \\ \hline
-		1.2ms		& 左死點 \\ \hline
-	\end{tabular}
-	\label{t:steering}
-\end{table}
+	\begin{subfigure}[t]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/NoWayToGo_Real}
+		\caption{實際情況}
+		\label{f:no_way_to_go_real}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/NoWayToGo}
+		\caption{光學雷達量測結果}
+		\label{f:no_way_to_go_measured}
+	\end{subfigure}
+	\caption{無候選轉向角之環境}
+	\label{f:no_way_to_go}
+\end{figure}
+此問題將會使用速度控制與碰撞偵測補償，於~\ref{sec:speed_algorithm}節詳加介紹。
 
-\section{速度控制}
-本節將討論速度控制演算法，包含無候選方向情況發生時的補償。
+\subsubsection{安全空間邊界誤判}
+為了將VFH+使用在光學雷達上，本論文使用安全空間取代了原始計算方法，以增加計算效率。
+此方法在大部分情況下都能快速且有效的找出安全空間之邊界向量，然而在某些特殊情況下，
+此方法會得到不正確的邊界向量，進而計算出錯誤的轉向角度，圖~\ref{f:wrong_boundary}即為一範例，
+而依圖~\ref{f:wrong_boundary}之環境產生之各直方圖如圖~\ref{f:closest_histograms}所示。
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[t]{0.51\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/wrong_boundary_real}
+		\caption{實際情況}
+		\label{f:wrong_boundary_real}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/wrong_boundary}
+		\caption{光學雷達量測結果}
+		\label{f:wrong_boundary_m}
+	\end{subfigure}
+	\caption{安全空間邊界誤判之環境}
+	\label{f:wrong_boundary}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.92\textwidth]{figures/algorithm/closest_histograms}
+	\caption{環境直方圖}
+	\label{f:closest_histograms}
+\end{figure}
 
+由於找尋安全空間的方式是從二元直方圖$H_i$中找出連續為$0$的區域，
+並根據此區域的邊界於$d_i$中找出相對應的邊界向量$(\mathbf{B_L},\mathbf{B_R})$，
+因此邊界向量會是離該空間最近的兩個向量，如圖~\ref{f:closest_histograms}所示。
+根據此計算方式，於圖~\ref{f:wrong_boundary}的環境下所找出的空間邊界與進行邊界縮減後的方向如圖~\ref{f:w_b_wrong_direction}所示。
+而此時量測到的邊界會造成縮減角度不足，計算出錯誤的轉向角度，即為發生了邊界誤判。
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.8\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/w_b_wrong_direction}
+		\caption{計算後的邊界方向}
+		\label{f:w_b_wrong_direction}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.8\textwidth}
+		\includegraphics[width=\textwidth]{figures/algorithm/w_b_right_direction}
+		\caption{實際之邊界方向}
+		\label{f:w_b_right_direction}
+	\end{subfigure}
+	\caption{邊界縮減後之方向}
+	\label{f:wrong_boundary_directions}
+\end{figure}
+
+由圖~\ref{f:wrong_boundary}可觀察到，真正的邊界應為障礙物之頂角，如圖~\ref{f:w_b_right_direction}所示。
+因為距離較近，此邊界能夠提供機器人足夠的縮減角度，讓機器人能夠安全通過該空間。
+
+為了解決此問題，可以對每一個量測值$d_i$與其角度$\theta_i$依前述的邊界縮減方式，計算所有量測值對機器人轉向角度的限制，如此便可找出真正的邊界向量。
+然而此計算相當費時，而且對轉向角限制最大的通常是距離最近的障礙物，因此本論文僅計對距離機器人最近的量測值$d_{min}$與其角度$\theta_{min}$
+計算邊界縮減值，找出其對機器人轉向角的限制範圍$(R_l,R_r)$，如圖~\ref{f:closest_boundary}所示。
+若是邊界縮減後的安全空間之右邊界角度落在此範圍內，則將該邊界之角度設為$R_l$；
+若縮減後的左邊界角度落在此範圍內，則將該邊界之角度設為$R_r$。如此，便可補償邊界誤判的問題，同時不致於降低計算效率。
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/algorithm/closest_boundary}
+	\caption{最近距離之邊界縮減}
+	\label{f:closest_boundary}
+\end{figure}
+
+\section{速度演算法}
+\label{sec:speed_algorithm}
 \subsection{障礙物密度}
 原先的VFH+使用障礙物密度函數$D$來計算機器人於該環境狀態下的速度，
 而此函數可使用光學雷達的量測結果$d_i$與最大量測距離$d_{max}$計算：
@@ -516,72 +600,59 @@ Yun-Trooper II的轉向機構是由伺服馬達所控制，而伺服馬達是由
 並沒有將機器人當下的速度加入考慮。然而在進行路徑規劃時，若是機器人的速度過快，則機器人可能無法成功進行迴避，
 來不及做出轉向反應，因此機器人當下的速度也是一個相當重要的因素。
 
-\subsection{環境變化率}
+\subsection{障礙物接近率}
 由於本論文使用的實驗平台Yun-Trooper II並不具備速度感測器，無法直接獲得機器人的速度。
-因此，本論文在原先的障礙物密度中增加一項「環境變化率」$\delta$，做為目前機器人速度的補償值。
+因此，本論文在原先的障礙物密度中增加一項障礙物接近率（Obstacle Approaching Rate）$\delta$，做為目前機器人速度的補償值。
 
-環境變化率$\delta$的概念為，假設機器人位於一靜態環境中（障礙物的位置不隨時間而改變），
+障礙物接近率$\delta$的概念為，假設機器人位於一靜態環境中（障礙物的位置不隨時間而改變），
 則若是量測到的環境變化相當大，代表機器人的速度較高；反之則代表速度較低。
-而環境變化又以正前方的變化最為重要，因為這代表機器人接近正前方障礙物的速度。
+而環境變化又以正前方的變化最為重要，因為這代表機器人接近正前方障礙物的速度，如圖~\ref{f:OAR}所示。
 因此，設定一角度範圍，例如正前方左右各$20\,^{\circ}$，對所有位於此範圍內的光學雷達量測值$d_j$，
-其環境變化率可依下式計算：
+$\delta$可依下式計算：
 \begin{equation}
-	\delta = \frac{1}{N}\sum_{j}\frac{(d_j)_t - (d_j)_{t-1}}{T}
-	\label{e:speed_control}
+	\delta = -\frac{1}{M}\sum_{j}\frac{(d_j)_t - (d_j)_{t-1}}{T}
 \end{equation}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/algorithm/obstacle_approaching_rate}
+	\caption{障礙物接近率示意圖}
+	\label{f:OAR}
+\end{figure}
 其中$(d_j)_t$代表當下的環境量測值；$(d_j)_{t-1}$代表上一次的環境量測值；
-$T$代表兩次量測的時間間隔；$N$代表範圍內的量測值個數。
+$T$代表兩次量測的時間間隔；$M$代表範圍內的量測值個數。
 
 對路徑規劃來說，最重要的是以高速接近障礙物時能夠成功的減速，對加速的要求則相對較低。因此，在計算環境變化率時，
-只將變化率$d_t - d_{t-1}$為負值（障礙物接近機器人）的方向納入計算，將變化率為正值的排除在外：
+只將變化率$d_t - d_{t-1}$為負值（障礙物接近機器人）的方向納入計算，將變化率為正值的排除在外，得$\delta_a$：
 \begin{equation}
-	\delta = \frac{1}{N}\sum_{j}\frac{P((d_j)_t - (d_j)_{t-1})}{T}
+	\delta_a = -\frac{1}{M}\sum_{j}\frac{\Delta((d_j)_t - (d_j)_{t-1})}{T}
 \end{equation}
 其中
 \begin{equation*}
-	P(x) = 
+	\Delta(d) = 
 	\begin{cases}
-		x	& \textrm{if } x > 0 \\
+		d	& \textrm{if } d < 0 \\
 		0	& \textrm{otherwise} \\
 	\end{cases}
 \end{equation*}
 
-為了將環境變化率與環境密度能夠一起計算，必須讓環境變化率的範圍落在$0$與$1$之間。
-因此，將上式算出的$\delta$除以機器人的最大速度$v_{max}$便可得到落在$0$與$1$之間的環境變化率。
+為了讓障礙物接近率與環境密度能夠一起計算，必須讓障礙物接近率的範圍落在$0$與$1$之間。
+因此，將上式算出的$\delta_a$除以機器人的最大速度$v_{max}$便可得到落在$0$與$1$之間的障礙物接近率$\delta_n$：
 \begin{equation}
-	\delta = -\frac{1}{N \cdot v_{max}}\sum_{j}\frac{P((d_j)_t - (d_j)_{t-1})}{T}
+	\delta_n = -\frac{1}{M \cdot v_{max}}\sum_{j}\frac{\Delta((d_j)_t - (d_j)_{t-1})}{T}
 \end{equation}
-$\delta$之值越接近$-1$代表環境變化越大，障礙物以較高的速度接近機器人；反之則代表障礙物以較低的速度接近。
+$\delta_n$之值越接近$1$代表障礙物以較高的速度接近機器人；反之則代表障礙物以較低的速度接近。
 
 最後，將環境變化率$\delta$列入考慮後，速度$v$可依下式計算：
 \begin{equation}
-	v = v_{min} + (1-\frac{D(d_i)+\delta}{2}) \cdot (v_{max} - v_{min})
+	v = v_{min} + (1-(D(d_i)+\delta)) \cdot (v_{max} - v_{min})
+	\label{e:speed_control}
 \end{equation}
 
-\subsection{無候選方向}
-本論文使用的避障演算法有時會發生誤判，將可通過的空間判定為無法通過造成導航停止。
-這通常發生在機器人進入了較狹窄的空間中，且可通過之方向與機器人行進方向垂直時，圖~\ref{f:no_way_to_go}的情況即為一範例。
-\begin{figure}[h!]
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{figures/NoWayToGo_Real}
-		\caption{實際情況}
-		\label{f:no_way_to_go_real}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{figures/NoWayToGo}
-		\caption{光學雷達量測結果}
-		\label{f:no_way_to_go_measured}
-	\end{subfigure}
-	\caption{無候選轉向角示意圖}
-	\label{f:no_way_to_go}
-\end{figure}
-在圖~\ref{f:no_way_to_go_measured}中，藍色虛線為Yun-Trooper II以最小迴轉半徑右轉之軌跡，
-可以看到右側的空間的確足以讓Yun-Trooper II通過，但在路徑規劃演算法中該空間會發生邊界交疊，因此被判定為無法通過。
-
 \subsection{碰撞偵測}
-因為避障演算法在某些情況下會發生誤判的情形，造成導航停止，所以本論文在機器人的導航過程中不斷偵測碰撞是否即將發生，
-使用碰撞偵測做為導航停止與否的指標，而非前進方向。在本論文中，碰撞偵測可分為兩階段：
+先前於~\ref{subsec:problem}中提到，因為避障演算法在某些情況下會發生誤判的情形，造成導航停止，
+所以本論文在機器人的導航過程中不斷偵測碰撞是否即將發生，使用碰撞偵測做為導航停止與否的指標，而非轉向方向。
+
+碰撞偵測可分為兩階段：
 第一階段使用設定的機器人尺寸，偵測障礙物是否已經發生碰撞；
 第二階段是偵測機器人的行進方向是否有障礙物存在，偵測碰撞是否即將發生。
 只要其中一階段偵測到碰撞即代表碰撞發生，機器人將會停止前進。
@@ -593,7 +664,7 @@ $\delta$之值越接近$-1$代表環境變化越大，障礙物以較高的速�
 即可判定碰撞是否發生，如圖~\ref{f:collision_1stage}所示。
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{figures/collision_1stage}
+	\includegraphics[width=0.5\textwidth]{figures/algorithm/collision_1stage}
 	\caption{第一階段碰撞偵測示意圖}
 	\label{f:collision_1stage}
 \end{figure}
@@ -608,7 +679,7 @@ $\delta$之值越接近$-1$代表環境變化越大，障礙物以較高的速�
 \end{equation}
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.45\textwidth]{figures/collision_2stage}
+	\includegraphics[width=0.45\textwidth]{figures/algorithm/collision_2stage}
 	\caption{第二階段碰撞偵測示意圖}
 	\label{f:collision_2stage}
 \end{figure}
@@ -617,13 +688,23 @@ $\delta$之值越接近$-1$代表環境變化越大，障礙物以較高的速�
 在此角度範圍內的光學雷達量測值$d_i$若小於預先設定的距離$x$，如圖~\ref{f:collision_2stage}所示，
 代表即將發生碰撞。
 
-\subsection{速度控制法則}
-綜合以上演算法，本論文之速度控制法則如下所述：
-\begin{enumerate}
-	\item 使用避障演算法計算轉向角度$c_t$。
-	\item 若$c_t$存在則輸出相對應的轉向命令，同時使用~\ref{e:speed_control}式計算速度$v$；
-		若$c_t$不存在則使用前一次的轉向角度$c_{t-1}$輸出轉向命令，並將速度$v$設為最低速度$v_{min}$。
-	\item 使用碰撞偵測演算法偵測是否發生碰撞，若是則停止導航，速度輸出為零；否則輸出上一步驟所計算的速度$v$。
-\end{enumerate}
+\section{控制法則}
+綜合以上之演算法，機器人的轉向與速度控制法則使用虛擬碼表示如下：
+\begin{center}
+	\begin{algorithmic}[H]
+		\If {$c_t \textrm{ is available}$}
+			\State \textrm{steer} $\gets K \cdot c_t$
+			\State \textrm{speed} $\gets v$
+		\Else
+			\State \textrm{steer} $\gets K \cdot c_{t-1}$
+			\State \textrm{speed} $\gets v_{min}$
+		\EndIf
 
+		\If {\textrm{collision detected}}
+			\State \textrm{speed} $\gets 0$
+		\EndIf
 
+		\State \textrm{setCommand\_Steer(steer)}
+		\State \textrm{setCommand\_Speed(speed)}
+	\end{algorithmic}
+\end{center}

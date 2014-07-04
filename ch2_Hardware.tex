@@ -14,7 +14,7 @@ Yun-Trooper II的一切動作都是由遠端無線操控，由筆記型電腦搭
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{figures/HardwareStructure}
+	\includegraphics[width=\textwidth]{figures/hardware/HardwareStructure}
 	\caption{Yun-Trooper II硬體架構圖}
 	\label{f:hardware_structure}
 \end{figure}
@@ -41,7 +41,7 @@ BeagleBone Black為一開放原始碼之開發平台，具有低功耗、體積�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{figures/beagleboneblack-specs}
+	\includegraphics[width=\textwidth]{figures/hardware/beagleboneblack-specs}
 	\caption{BeagleBone Black開發板}
 	\caption*{來源：codeduino.com}
 	\label{f:beagleboneblack-specs}
@@ -63,14 +63,14 @@ BeagleBone Black為一開放原始碼之開發平台，具有低功耗、體積�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=4cm]{figures/MTi-G}
+	\includegraphics[width=4cm]{figures/hardware/MTi-G}
 	\caption{Xsens MTi-G AHRS位置姿態感測器}
 	\caption*{來源：www.xsens.com}
 	\label{f:MTi-G}
 \end{figure}
 
 \subsection{掃描式雷射測距儀}
-Yun-Trooper II使用HOKUYO公司所生產的URG-04LX-UG01掃描式雷射測距儀來量測週遭環境的變化，規劃路徑以避開障礙物。
+Yun-Trooper II使用HOKUYO公司所生產的URG-04LX-UG01掃描式雷射測距儀，又稱光學雷達，來量測週遭環境的變化，規劃路徑以避開障礙物。
 其規格如表~\ref{t:urg-specs}所示，外觀如圖~\ref{f:urg}所示
 
 \begin{table}[h!]
@@ -93,7 +93,7 @@ Yun-Trooper II使用HOKUYO公司所生產的URG-04LX-UG01掃描式雷射測距�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/URG-04LX-UG01}
+	\includegraphics[width=6cm]{figures/hardware/URG-04LX-UG01}
 	\caption{HOKUYO URG-04LX-UG01掃描式雷射測距儀}
 	\caption*{來源：www.hokuyo-aut.jp}
 	\label{f:urg}
@@ -123,7 +123,7 @@ Yun-Trooper II使用HOKUYO公司所生產的URG-04LX-UG01掃描式雷射測距�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/DS1015}
+	\includegraphics[width=6cm]{figures/hardware/DS1015}
 	\caption{DS1015數位伺服機}
 	\caption*{來源：Thunder Tiger官方網站}
 	\label{f:ds1015}
@@ -142,7 +142,7 @@ Yun-Trooper II使用MABUCHI MOTOR公司生產的RS-550VC-7525直流馬達做為�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/motor}
+	\includegraphics[width=6cm]{figures/hardware/motor}
 	\caption{RS-550VC-7525直流馬達}
 	\caption*{來源：MABUCHI官方網站}
 	\label{f:rs550vc}
@@ -154,7 +154,7 @@ Yun-Trooper II使用MABUCHI MOTOR公司生產的RS-550VC-7525直流馬達做為�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=8cm]{figures/motor_driver}
+	\includegraphics[width=8cm]{figures/hardware/motor_driver}
 	\caption{Pololu MD01B直流馬達驅動器}
 	\caption*{來源：Pololu官方網站}
 	\label{f:motor_driver}
@@ -167,7 +167,7 @@ Yun-Trooper II使用兩個12V的鋰電池做為電力來源，一顆供應動力
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=14cm]{figures/LM2596}
+	\includegraphics[width=14cm]{figures/hardware/LM2596}
 	\caption{DC-DC LM2596可調穩壓模組}
 	\caption*{來源：飆機器人官方網站}
 	\label{f:lm2596}
@@ -190,7 +190,7 @@ XBee PRO與BeagleBone Black的連接是使用飆機器人公司所生產的XBee�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/xbee_pro}
+	\includegraphics[width=6cm]{figures/hardware/xbee_pro}
 	\caption{XBee PRO無線通訊模組}
 	\caption{來源：digipak.org}
 	\label{f:xbee_pro}
@@ -198,7 +198,7 @@ XBee PRO與BeagleBone Black的連接是使用飆機器人公司所生產的XBee�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/xbee2ttl}
+	\includegraphics[width=6cm]{figures/hardware/xbee2ttl}
 	\caption{XBee轉TTL轉接板}
 	\caption*{來源：飆機器人官方網站}
 	\label{f:xbee2ttl}
@@ -206,7 +206,7 @@ XBee PRO與BeagleBone Black的連接是使用飆機器人公司所生產的XBee�
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=6cm]{figures/xbee2usb}
+	\includegraphics[width=6cm]{figures/hardware/xbee2usb}
 	\caption{XBee Explorer USB轉接板}
 	\caption*{來源：www.sparkfun.com}
 	\label{f:xbee2usb}
