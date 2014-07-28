@@ -1,17 +1,18 @@
 \begin{abstractzh}
 本論文提出一方法整合了全球衛星定位系統（GPS）、
-姿態量測系統（AHRS）
-與光學雷達（LiDAR），
-以達成無人自走車自動導航與避開導航路徑上之障礙物的功能。
+姿態量測系統（AHRS）與光學雷達（LiDAR），
+達成無人自走車自動導航與避開導航路徑上之障礙物的功能。
 使用GPS和AHRS，
 車輛可得知本身與目標點之間的相對關係和方向資訊；
 使用光學雷達，車輛便可在導航的過程中量測週遭環境之變化。
 而利用這些感測器所測量到的資訊，便可規劃出讓自走車在導航至目標位置的同時也能夠避開障礙物的路徑。
 本論文開發的Yun-Trooper II使用四驅模型搖控車作為底盤，
-並使用ARM處理器架構之Linux嵌入式系統作為運算核心，
-而軟體方面則使用C++進行計算和控制車輛運動。
+並使用ARM處理器架構之GNU/Linux嵌入式系統作為運算核心，
+而軟體方面則使用C++程式語言進行開發，計算路徑和控制車輛。
+本論文將GPS導航演算法與避障演算法結合，修改VFH+避障演算法使其可利用光學雷達所得到的資訊進行計算，
+同時也改善了VFH+避障演算法的問題，使其能夠在更加多變的環境下成功避開障礙物。
 
-\keywordszh{GPS、AHRS、LiDAR、Linux、無人自走車}
+\keywordszh{GPS、AHRS、LiDAR、GNU/Linux、無人自走車、避障演算法, VFH, VFH+}
 
 \end{abstractzh}
 
@@ -21,13 +22,17 @@ of an Unmanned Ground Vehicle (UGV), which integrated the
 Global Positioning System (GPS), 
 Attitude and Heading Refrence System (AHRS) and
 Light Detection and Ranging sensor (LiDAR).
-With GPS and AHRS sensor, position of the target relative to vehicle itself and heading of the vehicle could be determined.
-And with a LiDAR sensor, the vehicle could also perceive the environment.
-From the data collected by these sensors, navigation algorithm could planning a collision-free path to avoid obstacles and reach the target.
-The thesis has developed an UGV named `Yun-Trooper \nolinebreak II', which is based on a 4-wheel-drived remote-controlled model car.
-It is equipped with an ARM-Based embedded Linux computer to make calculation and control, and all the program were developed by C++ programming
-language.
+With GPS and AHRS sensor, relative position between the target and the vehicle itself and heading of the vehicle could be determined.
+With a LiDAR sensor, the environment could also be perceived by the vehicle. 
+The thesis has developed a path-planning algorithm which integrated all the data acquired by these sensors, 
+in order to avoid obstacles in the environment and reach the target defined by GPS at the same time.
+The thesis has developed an UGV named `Yun-Trooper \nolinebreak II' based on a 4-wheel-drived remote-controlled model car.
+It was equipped with an ARM-Based embedded GNU/Linux computer to make calculation and control,
+and all the program were developed by C++ programming language.
+The thesis has integrated the GPS navigation and obstacle avoidance algorithms,
+modified the VFH+ obstacle avoidance algorithm to adapt the data acquired by LiDAR.
+The modified version of VFH+ offers several improvements that overcomes the inability of VFH+ in some environments.
 
-\keywordsen{GPS, AHRS, LiDAR, Linux, UGV}
+\keywordsen{GPS, AHRS, LiDAR, GNU/Linux, UGV, Obstacle Avoidance, VFH, VFH+}
 
 \end{abstracten}

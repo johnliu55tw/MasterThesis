@@ -10,6 +10,9 @@
 \usepackage{amsmath}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
+\usepackage{tabu}
+\usepackage{longtable}
+%\usepackage[toc,header,title]{appendix}
 
 % Using the tex-text mapping for ligatures etc.
 \defaultfontfeatures{Mapping=tex-text}
@@ -21,6 +24,7 @@
 
 % Your information goes here
 \input{nyustvars}
+
 
 \begin{document}
 \CenterWallPaper{.20}{nyust-logo}
@@ -46,6 +50,10 @@
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 
+\cleardoublepage
+\addcontentsline{toc}{chapter}{符號說明}
+\input{symbol_list}
+
 \mainmatter
 
 % Your thesis goes here
@@ -53,8 +61,8 @@
 \input{ch1_Introduction}
 \input{ch2_Hardware}
 \input{ch3_Algorithm}
-
-\appendix
+\input{ch4_Experiments}
+\input{ch5_Conclusion}
 
 \backmatter
 
@@ -63,4 +71,7 @@
 
 % Your bibliography goes here
 \bibliography{thesis}
+
+\appendix
+\input{app_MTi-G_Accuracy}
 \end{document}
